@@ -6,6 +6,8 @@ import { router } from './routes'
 
 const app = express()
 
+app.use(express.json()) // Metodo para entender o json passado no posteman
+
 app.use(router)
 
 const PORT = process.env.PORT || 3000
