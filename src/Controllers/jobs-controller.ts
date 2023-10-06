@@ -33,8 +33,9 @@ show: async (req: Request, res: Response) => {
     const { id } = req.params
 
     try {
-        const job = await Job.findByPk(id, { include: 'company' }) // Retornava so a vaga - Includes retorna as informações da empresa 
-        return res.json(job)
+        const job = await Job.findByPk(id, { include: ['company', 'candidates'] }) // Retornava so a vaga - Includes retorna as informações da empresa e dos candidatos de vaga
+        const candidatesCount = await job?.countCandidates() // Retorna o quantidade de candidatos cadastrado a vaga
+        return res.json({...job?.get(), candidatesCount})
     } catch (err) {
         if (err instanceof Error) {
     return res.status(400).json({ message: err.message })
@@ -76,6 +77,46 @@ delete: async (req: Request, res: Response) => {
     } catch (err) {
         if (err instanceof Error) {
     return res.status(400).json({ message: err.message })
+        }
+    }
+}, 
+
+  // Adicionar candidato a vaga - POST - /jobs/:id/addCandidate
+addCandidate: async (req: Request, res: Response) => {
+  const jobId = req.params.id
+  const { candidateId } = req.body
+
+  try {
+      const job = await Job.findByPk(jobId)
+
+      if (job === null) return res.status(404).json({ message: 'Vaga de emprego não encontrada' }) // Verificação feita somente para resolver o problema de caso nao for passado jobId ai corrigi o nulo dele add a mensagem
+
+      await job.addCandidate(candidateId) // Metodo que add candidatos a vagas - Vinculado no controller do job
+
+      return res.status(201).send()
+  } catch (err) {
+      if (err instanceof Error) {
+          return res.status(400).json({ message: err.message })
+      }
+  }},
+
+
+    // Remover candidato da vaga - POST - /jobs/:id/removeCandidate
+  removeCandidate: async (req: Request, res: Response) => {
+    const jobId = req.params.id
+    const { candidateId } = req.body
+
+    try {
+        const job = await Job.findByPk(jobId)
+
+        if (job === null) return res.status(404).json({ message: 'Vaga de emprego não encontrada' }) // Metodo que remove candidatos a vagas - Vinculado no controller do job
+
+        await job.removeCandidate(candidateId)
+
+        return res.status(204).send()
+    } catch (err) {
+        if (err instanceof Error) {
+            return res.status(400).json({ message: err.message })
         }
     }
 }
