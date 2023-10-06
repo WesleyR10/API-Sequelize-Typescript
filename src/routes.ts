@@ -1,6 +1,7 @@
 import express from 'express'
 import { candidatesController } from './Controllers/candidates-controller'
 import { companiesController } from './Controllers/companies-controller'
+import { jobsController } from './Controllers/jobs-controller'
 
 const router = express.Router()
 
@@ -19,6 +20,9 @@ router.get('/', (req, res) => res.json({ hello: 'Hello, world!' }))
   router.post('/companies', companiesController.save) //Rota que insere uma informação no banco de dados
   router.put('/companies/:id', companiesController.update) //Rota que atualiza os dados de uma company
   router.delete('/companies/:id', companiesController.delete) //Rota que deleta uma company do banco de dados
+
+  // Todas as rotas de jobs
+  router.get('/jobs', jobsController.index) //Rota que retorna todos as vagas de emprego
 
 
 export { router }

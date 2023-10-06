@@ -1,7 +1,5 @@
 import { Request, Response } from 'express'
-import { Candidate } from '../models/candidate'
-import { where } from 'sequelize'
-
+import { Candidate } from '../models'
 
 export const candidatesController = {
 
