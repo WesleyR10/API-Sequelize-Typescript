@@ -23,6 +23,10 @@ router.get('/', (req, res) => res.json({ hello: 'Hello, world!' }))
 
   // Todas as rotas de jobs
   router.get('/jobs', jobsController.index) //Rota que retorna todos as vagas de emprego
+  router.get('/jobs/:id', jobsController.show) //Rota que retorna uma vaga de emprego especifica
+  router.post('/jobs', jobsController.save) //Rota que insere uma informação de vaga de emprego
+  router.put('/jobs/:id', jobsController.update) //Rota que atualiza os dados de uma vaga de emprego
+  router.delete('/jobs/:id', jobsController.delete) //Rota que deleta uma vaga de emprego do banco de dados
 
 
 export { router }
